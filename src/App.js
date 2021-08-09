@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import ImageGrid from './components/ImageGrid'
+import Model from './components/Model'
+import SearchHead from './components/SearchHead'
 
 function App() {
+  const [modelUrl, setModelUrl] = useState('')
+  const [isModelOn, setIsModelOn] = useState(false)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <div>
+        {isModelOn && <Model modelUrl={modelUrl} setIsModelON={setIsModelOn} />}
+        <SearchHead />
+        <ImageGrid setIsModelOn={setIsModelOn} setModelUrl={setModelUrl} />
+      </div>
+    </>
+  )
 }
 
-export default App;
+export default App
