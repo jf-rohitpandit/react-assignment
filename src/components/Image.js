@@ -1,19 +1,27 @@
-const Image = ({ setModelUrl, setIsModelOn }) => {
+import PropTypes from 'prop-types'
+
+const Image = ({ setModelUrl, setIsModelOn, url }) => {
   return (
     <div
-      className="mt-1 mx-3"
+      className="  mt-1 mx-3 flex-1 d-flex justify-content-center align-items-center "
+      style={{ width: 400, height: 400 }}
       onClick={() => {
-        setModelUrl('https://picsum.photos/600/600?random=3')
+        setModelUrl(url)
         setIsModelOn(true)
       }}
     >
       <img
         alt="some "
-        src="https://picsum.photos/600/600?random=3"
-        width="400"
-        height="400"
+        src={url}
+        style={{ objectFit: 'cover', maxWidth: 400, maxHeight: 400 }}
       />
     </div>
   )
+}
+
+Image.propTypes = {
+  setModelUrl: PropTypes.func.isRequired,
+  setIsModelOn: PropTypes.func.isRequired,
+  url: PropTypes.string.isRequired,
 }
 export default Image

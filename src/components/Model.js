@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
+import Loading from './Loading'
 
 const Model = ({ modelUrl, setIsModelON }) => {
   const [loading, setLoading] = useState(true)
@@ -25,11 +27,7 @@ const Model = ({ modelUrl, setIsModelON }) => {
         className=" border border-3 border-dark"
         style={{ maxHeight: '75vh', maxWidth: '75vw', overflow: 'hidden' }}
       >
-        {loading === true && (
-          <div className="">
-            <h2>Loading....</h2>
-          </div>
-        )}
+        {loading === true && <Loading />}
         <img
           alt="some "
           src={modelUrl}
@@ -46,6 +44,11 @@ const Model = ({ modelUrl, setIsModelON }) => {
       </div>
     </div>
   )
+}
+
+Model.propTypes = {
+  modelUrl: PropTypes.string.isRequired,
+  setIsModelON: PropTypes.func.isRequired,
 }
 
 export default Model
