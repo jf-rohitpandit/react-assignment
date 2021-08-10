@@ -20,11 +20,13 @@ const ImageGrid = ({
 }) => {
   const [loadMore, setLoadMore] = useState(true)
   const pageNumber = useRef(1)
+  const [isMoreResult, setIsMoreResult] = useState(true)
 
   window.onscroll = debounce(() => {
     if (
+      isMoreResult &&
       window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
+        document.documentElement.offsetHeight
     ) {
       setLoading(true)
       setLoadMore(true)
@@ -49,8 +51,17 @@ const ImageGrid = ({
         return `https://live.staticflickr.com/${singlePhotoData.server}/${singlePhotoData.id}_${singlePhotoData.secret}_w.jpg`
       })
 
+      if (
+        res.data.photos.total === 0 ||
+        res.data.photos.total === photos.length
+      ) {
+        setIsMoreResult(false)
+      }
+
       console.log(newPhotos.length, newPhotos)
       setPhotos((photos) => [...photos, ...newPhotos])
+
+      setLoading(false)
     } catch (error) {
       toast.error(error.message)
     }
@@ -69,7 +80,6 @@ const ImageGrid = ({
     if (loadMore === true && loading === true) {
       getImages()
       setLoadMore(false)
-      setLoading(false)
     }
   }, [getImages, loadMore])
 
@@ -87,6 +97,11 @@ const ImageGrid = ({
           ))}
       </div>
       {loading && <Loading />}
+      {!isMoreResult && !loading && (
+        <div className=" d-flex justify-content-center align-items-center">
+          <p>Thats all for now!</p>
+        </div>
+      )}
     </main>
   )
 }
