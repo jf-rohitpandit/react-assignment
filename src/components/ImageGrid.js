@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import debounce from 'lodash.debounce'
 import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
 import Image from './Image'
 import Loading from './Loading'
+import throttle from 'lodash.throttle'
+
+const PER_PAGE = 10
 
 const ImageGrid = ({
   setModelUrl,
@@ -13,8 +16,10 @@ const ImageGrid = ({
   setLoading,
   photos,
   loading,
+  searchText,
 }) => {
   const [loadMore, setLoadMore] = useState(true)
+  const pageNumber = useRef(1)
 
   window.onscroll = debounce(() => {
     if (
@@ -23,14 +28,21 @@ const ImageGrid = ({
     ) {
       setLoading(true)
       setLoadMore(true)
+      pageNumber.current = pageNumber.current + 1
     }
   }, 100)
 
-  const getImages = useCallback(async () => {
+  const getSearchUrl = useCallback(() => {
+    if (searchText === '') {
+      return `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=10829aa124017c4b3e346c7b8f317c63&safe_search=3&page=${pageNumber.current}&per_page=${PER_PAGE}&format=json&nojsoncallback=1`
+    }
+
+    return `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=10829aa124017c4b3e346c7b8f317c63&safe_search=3&text=${searchText}&page=${pageNumber.current}&per_page=10&format=json&nojsoncallback=1`
+  }, [searchText, pageNumber])
+
+  const getImages = async () => {
     try {
-      const res = await axios.get(
-        'https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=10829aa124017c4b3e346c7b8f317c63&per_page=10&format=json&nojsoncallback=1',
-      )
+      const res = await axios.get(getSearchUrl())
 
       console.log(res.data.photos)
       const newPhotos = res.data.photos.photo.map((singlePhotoData) => {
@@ -39,16 +51,25 @@ const ImageGrid = ({
 
       console.log(newPhotos.length, newPhotos)
       setPhotos((photos) => [...photos, ...newPhotos])
-      setLoading(false)
     } catch (error) {
       toast.error(error.message)
     }
-  }, [])
+  }
+
+  const optimisedGetImage = useRef(
+    throttle(useCallback(getImages, [getSearchUrl]), 1000, { trailing: false }),
+  )
 
   useEffect(() => {
-    if (loadMore === true) {
+    setLoading(true)
+    setLoadMore(true)
+  }, [searchText])
+
+  useEffect(() => {
+    if (loadMore === true && loading === true) {
       getImages()
       setLoadMore(false)
+      setLoading(false)
     }
   }, [getImages, loadMore])
 
@@ -77,6 +98,7 @@ ImageGrid.propTypes = {
   setLoading: PropTypes.func.isRequired,
   photos: PropTypes.arrayOf(PropTypes.string).isRequired,
   loading: PropTypes.bool.isRequired,
+  searchText: PropTypes.string.isRequired,
 }
 
 export default ImageGrid

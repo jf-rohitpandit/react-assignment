@@ -12,7 +12,7 @@ const Model = ({ modelUrl, setIsModelON }) => {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(200,200,200,.4)',
+    backgroundColor: 'rgba(50,50,50,.6)',
     overflow: 'hidden',
     zIndex: 'Infinity',
   }
@@ -24,7 +24,7 @@ const Model = ({ modelUrl, setIsModelON }) => {
       }}
     >
       <div
-        className=" border border-3 border-dark"
+        className=" bg-white p-3"
         style={{ maxHeight: '75vh', maxWidth: '75vw', overflow: 'hidden' }}
       >
         {loading === true && <Loading />}

@@ -13,6 +13,7 @@ const Image = ({ setModelUrl, setIsModelOn, url }) => {
       <img
         alt="some "
         src={url}
+        className=" shadow"
         style={{ objectFit: 'cover', maxWidth: 400, maxHeight: 400 }}
       />
     </div>

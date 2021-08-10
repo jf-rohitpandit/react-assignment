@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ImageGrid from './components/ImageGrid'
 import Model from './components/Model'
 import SearchHead from './components/SearchHead'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -10,12 +10,17 @@ function App() {
   const [isModelOn, setIsModelOn] = useState(false)
   const [loading, setLoading] = useState(true)
   const [photos, setPhotos] = useState([])
-  const [isSearchText, setIsSearchText] = useState(false)
+  const [searchText, setSearchText] = useState('')
 
   return (
     <div>
       {isModelOn && <Model modelUrl={modelUrl} setIsModelON={setIsModelOn} />}
-      <SearchHead setLoading={setLoading} setPhotos={setPhotos} />
+      <SearchHead
+        setLoading={setLoading}
+        setPhotos={setPhotos}
+        searchText={searchText}
+        setSearchText={setSearchText}
+      />
       <ToastContainer />
       <ImageGrid
         setIsModelOn={setIsModelOn}
@@ -24,7 +29,7 @@ function App() {
         loading={loading}
         photos={photos}
         setPhotos={setPhotos}
-        isSearchText={isSearchText}
+        searchText={searchText}
       />
     </div>
   )
