@@ -44,7 +44,7 @@ const ImageGrid = ({
   }, [searchText, pageNumber])
 
   //Gets the photos from the api and stores them in State(Photos)
-  const getImages = async () => {
+  const getImages = useCallback(async () => {
     try {
       const res = await axios.get(getSearchUrl())
 
@@ -69,13 +69,13 @@ const ImageGrid = ({
     } catch (error) {
       toast.error(error.message)
     }
-  }
+  }, [getSearchUrl, photos, setLoading, setPhotos])
 
   //Triggers when some entry on Search bar is changed
   useEffect(() => {
     setLoading(true)
     setLoadMore(true)
-  }, [searchText])
+  }, [searchText, setLoading, setLoadMore])
 
   // gets the Images loaded
   useEffect(() => {
@@ -83,7 +83,7 @@ const ImageGrid = ({
       getImages()
       setLoadMore(false)
     }
-  }, [getImages, loadMore, loading])
+  }, [getImages, loadMore, loading, setLoadMore])
 
   return (
     <main>
