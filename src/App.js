@@ -4,6 +4,7 @@ import Model from './components/Model'
 import SearchHead from './components/SearchHead'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { loadData } from './utils/localStore'
 
 function App() {
   const [modelUrl, setModelUrl] = useState('')
@@ -11,6 +12,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [photos, setPhotos] = useState([])
   const [searchText, setSearchText] = useState('')
+  const [suggestions, setSuggestions] = useState(() => loadData())
 
   return (
     <div>
@@ -20,6 +22,8 @@ function App() {
         setPhotos={setPhotos}
         searchText={searchText}
         setSearchText={setSearchText}
+        suggestions={suggestions}
+        setSuggestions={setSuggestions}
       />
       <ToastContainer />
       <ImageGrid
