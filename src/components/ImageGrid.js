@@ -5,9 +5,8 @@ import PropTypes from 'prop-types'
 import { toast } from 'react-toastify'
 import Image from './Image'
 import Loading from './Loading'
-import throttle from 'lodash.throttle'
 
-const PER_PAGE = 10
+const PER_PAGE = 10 //Image results per page
 
 const ImageGrid = ({
   setModelUrl,
@@ -19,9 +18,10 @@ const ImageGrid = ({
   searchText,
 }) => {
   const [loadMore, setLoadMore] = useState(true)
-  const pageNumber = useRef(1)
-  const [isMoreResult, setIsMoreResult] = useState(true)
+  const pageNumber = useRef(1) // for the api call
+  const [isMoreResult, setIsMoreResult] = useState(true) // checking for more result  from api
 
+  //Infinite Scroll
   window.onscroll = debounce(() => {
     if (
       isMoreResult &&
@@ -34,6 +34,7 @@ const ImageGrid = ({
     }
   }, 100)
 
+  //custom URL based on Search or Default URL
   const getSearchUrl = useCallback(() => {
     if (searchText === '') {
       return `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=10829aa124017c4b3e346c7b8f317c63&safe_search=3&page=${pageNumber.current}&per_page=${PER_PAGE}&format=json&nojsoncallback=1`
@@ -42,15 +43,17 @@ const ImageGrid = ({
     return `https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=10829aa124017c4b3e346c7b8f317c63&safe_search=3&text=${searchText}&page=${pageNumber.current}&per_page=10&format=json&nojsoncallback=1`
   }, [searchText, pageNumber])
 
+  //Gets the photos from the api and stores them in State(Photos)
   const getImages = async () => {
     try {
       const res = await axios.get(getSearchUrl())
 
-      console.log(res.data.photos)
+      //Generting image Url from the result data
       const newPhotos = res.data.photos.photo.map((singlePhotoData) => {
         return `https://live.staticflickr.com/${singlePhotoData.server}/${singlePhotoData.id}_${singlePhotoData.secret}_w.jpg`
       })
 
+      //Checks for no result
       if (
         res.data.photos.total === 0 ||
         res.data.photos.total === photos.length
@@ -68,21 +71,19 @@ const ImageGrid = ({
     }
   }
 
-  const optimisedGetImage = useRef(
-    throttle(useCallback(getImages, [getSearchUrl]), 1000, { trailing: false }),
-  )
-
+  //Triggers when some entry on Search bar is changed
   useEffect(() => {
     setLoading(true)
     setLoadMore(true)
   }, [searchText])
 
+  // gets the Images loaded
   useEffect(() => {
     if (loadMore === true && loading === true) {
       getImages()
       setLoadMore(false)
     }
-  }, [getImages, loadMore])
+  }, [getImages, loadMore, loading])
 
   return (
     <main>

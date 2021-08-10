@@ -29,8 +29,8 @@ const SearchHead = ({
       <h2 className="text-white">Search photos</h2>
 
       <div
-        onFocus={() => setIsFocus(true)}
         tabIndex="100"
+        onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
       >
         <input

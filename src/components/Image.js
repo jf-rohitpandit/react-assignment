@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 const Image = ({ setModelUrl, setIsModelOn, url }) => {
   return (
     <div
-      className="  mt-1 mx-3 flex-1 d-flex justify-content-center align-items-center "
+      className="mt-1 mx-3 flex-1 d-flex justify-content-center align-items-center "
       style={{ width: 400, height: 400 }}
       onClick={() => {
         setModelUrl(url)

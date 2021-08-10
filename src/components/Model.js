@@ -24,8 +24,8 @@ const Model = ({ modelUrl, setIsModelON }) => {
       }}
     >
       <div
-        className=" bg-white p-3"
-        style={{ maxHeight: '75vh', maxWidth: '75vw', overflow: 'hidden' }}
+        className=" bg-white p-3 overflow-hidden"
+        style={{ maxHeight: '75vh', maxWidth: '75vw' }}
       >
         {loading === true && <Loading />}
         <img
